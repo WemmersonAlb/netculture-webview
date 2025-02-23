@@ -6,10 +6,11 @@
     <title th:text="${cLogado != null ? 'Perfil Comprador' : 'Perfil Vendedor'}">Página de Perfil</title>
     <link rel="stylesheet" type="text/css" th:href="@{/CSS/perfil.css}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
     <script defer th:src="@{/scripts/perfil.js}"></script>
 </head>
 <body>
-    <div class="navbar">
+    <div class="sidebar">
         <a th:href="${cLogado != null ? '/comprador/home/view' : '/vendedor/home/view'}" class="brand">Netculture</a>
         <button id="menuProfile"><i class="fas fa-user"></i></button>
         <button id="menuEdit"><i class="fas fa-edit"></i></button>
@@ -23,9 +24,11 @@
             <p><strong>Email:</strong> <span th:text="${cLogado != null ? cLogado.email : vLogado.email}">Email do Usuário</span></p>
             <p><strong>Telefone:</strong> <span th:text="${cLogado != null ? cLogado.whatsapp : vLogado.whatsapp}">Número de Telefone</span></p>
         </div>
-        
+        <h1 th:text="${msg}"></h1>
+        <h1 th:text="${csenha}"></h1>
+        <h1 th:text="${compradorSenha}"></h1>
         <div id="editForm" class="info-section">
-            <form th:action="${cLogado != null ? '/comprador/update' : '/vendedor/update'}" method="post">
+            <form th:action="${cLogado != null ? '/comprador/update' : '/vendedor/update'}" method="post" th:object="${object}">
                 <label for="name">Nome:</label>
                 <input type="text" id="name" name="nome" th:value="${cLogado != null ? cLogado.nome : vLogado.nome}" placeholder="Digite o nome" required>
             
@@ -36,10 +39,10 @@
                 <input type="tel" id="phone" name="whatsapp" th:value="${cLogado != null ? cLogado.whatsapp : vLogado.whatsapp}" placeholder="Digite o número de telefone" required>
 
                 <label for="password">Senha:</label>
-                <input type="password" id="password" name="senha" th:value="${cLogado != null ? cLogado.senha : vLogado.senha}" placeholder="Digite a senha" required>
+                <input type="password" id="senha" name="senha"  placeholder="Digite a senha" required>
 
-                <label for="confirmPassword">Repetir Senha:</label>
-                <input type="password" id="confirmPassword" placeholder="Repita a senha" required>
+                <label for="csenha">Repetir Senha:</label>
+                <input type="password" id="csenha" name="csenha" placeholder="Repita a senha" required>
 
                 <div th:if="${vLogado != null}">
                     <label for="descricao">Descrição:</label>

@@ -3,12 +3,9 @@ package com.netculture.netculture.controllers;
 import com.netculture.netculture.models.LoginDTO;
 import com.netculture.netculture.models.Vendedor;
 import com.netculture.netculture.repositories.RepositoryVendedor;
-import com.netculture.netculture.repositories.RepositoryLoja;
-import com.netculture.netculture.models.Loja;
 
 import jakarta.servlet.http.HttpSession;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.bson.types.ObjectId;
@@ -19,7 +16,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -34,8 +30,6 @@ public class ControllerVendedor {
     private RepositoryVendedor repositoryVendedor;
     @Autowired
     private HttpSession session;  
-    @Autowired
-    private RepositoryLoja repositoryLoja;
 
 
       
@@ -47,12 +41,16 @@ public class ControllerVendedor {
     
 
     @PostMapping("/create")
-    public String createVendedor(Model m, Vendedor vendedor) {
+    public String createVendedor(Model m, Vendedor vendedor, String csenha) {
         if(vendedor==null ||
             repositoryVendedor.findByEmail(vendedor.getEmail())!=null){
                 
                 m.addAttribute("msg", "Erro: Alguns campos não estão preenchidos ou o e-mail já está cadastrado");
                 return "createVendedor";
+        }
+        if(!vendedor.getSenha().equals(csenha)){
+            m.addAttribute("msg", "Erro: As senhas não coincidem");
+            return "createVendedor";
         }
         String senhaHash = new BCryptPasswordEncoder().encode(vendedor.getSenha());
         vendedor.setSenha(senhaHash);
@@ -81,8 +79,6 @@ public class ControllerVendedor {
             vendedorLogin.setSenha(null);
             session.setAttribute("vLogado", vendedorLogin);
             m.addAttribute("vLogado", vendedorLogin);
-            List<Loja> lojas = repositoryLoja.findByVendedorId(vendedorLogin.getId());
-            m.addAttribute("lojas", lojas);
             return "homeVendedor";
         }
 
@@ -95,8 +91,6 @@ public class ControllerVendedor {
         Vendedor v = (Vendedor) session.getAttribute("vLogado");
         if(v!=null){
             m.addAttribute("vLogado", v);
-            List<Loja> lojas = repositoryLoja.findByVendedorId(v.getId());
-            m.addAttribute("lojas", lojas);
             return "homeVendedor";
         }
         return "loginVendedor";
@@ -107,6 +101,7 @@ public class ControllerVendedor {
         Vendedor v = (Vendedor) session.getAttribute("vLogado");
         if(v!=null){
             m.addAttribute("vLogado", v);
+            m.addAttribute("object", new Vendedor());
             return "perfil";
         }
         return "loginVendedor";
@@ -119,44 +114,36 @@ public class ControllerVendedor {
         return "loginVendedor";
     }
     
-    
-// ############## Codígo adicionado por mim Anderson Guilherme ###############
-
-@GetMapping("/loja/create/view")
-public String createLojaView(Model m) {
-    m.addAttribute("loja", new Loja());
-    return "criarLoja";
-}
-
-@PostMapping("/loja/create")
-public String createLoja(Model m, @ModelAttribute Loja loja) {
-    Vendedor v = (Vendedor) session.getAttribute("vLogado");
-    if (v == null) {
-        m.addAttribute("msg", "Erro: Vendedor não logado");
-        return "loginVendedor";
+    @PostMapping("/update")
+    public String updateVendedor(Model m, Vendedor object, String csenha){
+        Vendedor v = (Vendedor) session.getAttribute("vLogado");
+        if(v==null){
+            m.addAttribute("msg", "Erro: Vendedor não logado");
+            return "loginVendedor";
+        }
+        if(!object.getSenha().equals(csenha)){
+            m.addAttribute("msg", "Erro: As senhas não coincidem");
+            return "perfil";
+        }
+        v.setNome(object.getNome());
+        v.setEmail(object.getEmail());
+        v.setWhatsapp(object.getWhatsapp());
+        v.setDescricao(object.getDescricao());
+        String senhaHash = new BCryptPasswordEncoder().encode(object.getSenha());
+        v.setSenha(senhaHash);
+        Vendedor vendedorSalvo = repositoryVendedor.save(v);
+        if(!Vendedor.isNull(vendedorSalvo)){
+            vendedorSalvo.setSenha(null);
+            m.addAttribute("vLogado", vendedorSalvo);
+            m.addAttribute("msg", "Perfil atualizado com sucesso!");
+            session.setAttribute("vLogado", vendedorSalvo);
+            return "perfil";
+        }
+        m.addAttribute("msg", "Erro ao atualizar perfil");
+        return "perfil";
     }
-    loja.setVendedor(v);
-    // Salvar a loja no repositório (RepositoryLoja)
-    repositoryLoja.save(loja);
-    m.addAttribute("msg", "Loja cadastrada com sucesso!");
-    List<Loja> lojas = repositoryLoja.findByVendedorId(v.getId());
-    m.addAttribute("lojas", lojas);
-    return "homeVendedor";
-}
 
-@GetMapping("/lojas/view")
-public String cardLojas(Model m) {
-    Vendedor v = (Vendedor) session.getAttribute("vLogado");
-    if (v == null) {
-        m.addAttribute("msg", "Erro: Vendedor não logado");
-        return "loginVendedor";
-    }
-    List<Loja> lojas = repositoryLoja.findByVendedorId(v.getId());
-    m.addAttribute("lojas", lojas);
-    return "homeVendedor";
-}
 
-//###############################################################################
 
 
 

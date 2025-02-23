@@ -10,3 +10,9 @@ menuProfileButton.addEventListener('click', () => {
         window.location.href = '/index';
     }
 });
+
+if(vLogado){
+    menuCreateStoreButton.addEventListener('click', () => {
+        window.location.href = '/vendedor/loja/cadastro';
+    });
+}

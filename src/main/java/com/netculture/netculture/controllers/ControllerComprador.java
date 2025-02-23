@@ -45,13 +45,18 @@ public class ControllerComprador {
     
 
     @PostMapping("/create")
-    public String createComprador(Model m, @ModelAttribute Comprador comprador) {
+    public String createComprador(Model m, @ModelAttribute Comprador comprador, String csenha) {
         if(comprador == null ||
             repositoryComprador.findByEmail(comprador.getEmail())!=null){
                 
                 m.addAttribute("msg", "Erro: Alguns campos não estão preenchidos ou o e-mail já está cadastrado");
                 return "createComprador";
         }
+        if(!comprador.getSenha().equals(csenha)){
+            m.addAttribute("msg", "Erro: As senhas não coincidem");
+            return "createComprador";
+        }
+
         String senhaHash = new BCryptPasswordEncoder().encode(comprador.getSenha());
         comprador.setSenha(senhaHash);
         Comprador compradorCadastrado = repositoryComprador.save(comprador);
@@ -104,6 +109,7 @@ public class ControllerComprador {
             m.addAttribute("msg", "Erro: Comprador não logado");
             return "loginComprador";
         }
+        m.addAttribute("object", new Comprador());
         m.addAttribute("cLogado", c);
         return "perfil";
     }
@@ -115,6 +121,36 @@ public class ControllerComprador {
         return "loginComprador";
     }
     
+    @PostMapping("/update")
+    public String updateComprador(Model m, @ModelAttribute Comprador object, String csenha) {
+        Comprador c = (Comprador) session.getAttribute("cLogado");
+        if(c == null){
+            m.addAttribute("msg", "Erro: Comprador não logado");
+            return "loginComprador";
+        }
+        if(csenha == null || !object.getSenha().equals(csenha)){
+            m.addAttribute("csenha", csenha);
+            m.addAttribute("compradorSenha", object.getSenha());
+            m.addAttribute("cLogado", c);
+            m.addAttribute("msg", "Erro: Senha incorreta");
+            return "perfil";
+        }
+        c.setNome(object.getNome());
+        c.setEmail(object.getEmail());
+        c.setWhatsapp(object.getWhatsapp());
+        String senhaHash = new BCryptPasswordEncoder().encode(object.getSenha());
+        c.setSenha(senhaHash);
+        Comprador compradorSalvo = repositoryComprador.save(c);
+        if(!Comprador.isNull(compradorSalvo)){
+            m.addAttribute("msg", "Perfil atualizado com sucesso!");
+            compradorSalvo.setSenha(null);
+            session.setAttribute("cLogado", compradorSalvo);
+            m.addAttribute("cLogado", compradorSalvo);
+            return "homeComprador";
+        }
+        m.addAttribute("msg", "Erro ao atualizar perfil");
+        return "perfil";
+    } 
 
 
 

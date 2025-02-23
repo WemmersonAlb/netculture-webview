@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Produto - NetCulture</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/CSS/cadastro.css}" />
+</head>
+<body>
+
+    <div class="container">
+        <div class="form-image">
+            <img th:src="@{/images/img-produto.png}" alt="Imagem de Produto">
+        </div>
+
+        <div class="form">
+            <form th:action="@{/produto/create}" method="post" th:object="${produto}">
+                
+                <div class="form-header">
+                    <div class="title">
+                        <h1>Cadastrar Produto</h1>
+                    </div>
+                    <div class="login-button">
+                        <button><a href="/vendedor/home/view">Voltar</a></button>
+                    </div>
+                </div>
+
+                <p th:text="${msg}"></p>
+
+                <div class="input-group">
+                    <div class="input-box">
+                        <label for="nome">Nome do Produto</label>
+                        <input type="text" id="nome" name="nome" placeholder="Digite o nome do produto" required>
+                    </div>
+
+                    <div class="input-box">
+                        <label for="descricao">Descrição</label>
+                        <textarea id="descricao" name="descricao" placeholder="Digite a descrição do produto" required></textarea>
+                    </div>
+
+                    <div class="input-box">
+                        <label for="preco">Preço</label>
+                        <input type="number" step="0.01" id="preco" name="preco" placeholder="Digite o preço" required>
+                    </div>
+
+                    <div class="input-box">
+                        <label for="imagem">URL da Imagem</label>
+                        <input type="text" id="imagem" name="imagem" placeholder="Cole a URL da imagem do produto">
+                    </div>
+                </div>
+
+                <div class="continue-button">
+                    <button type="submit">Cadastrar Produto</button>
+                </div>
+
+                <div class="back-link">
+                    <p>Quer voltar? <a href="/vendedor/home/view">Clique aqui</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

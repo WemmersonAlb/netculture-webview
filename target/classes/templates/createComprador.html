@@ -8,48 +8,61 @@
 </head>
 <body>
 
-    <!-- Navbar -->
-    <div class="navbar">
-        <a>NETCULTURE</a>
-    </div>
-    <p th:text="${msg}"></p>
-    <p th:text="${s}"></p>
-    <!-- Formulário de Cadastro -->
     <div class="container">
-        <h1>Cadastro do Comprador</h1>
-        <form th:action="@{/comprador/create}" method="post" th:object="${comprador}">
-            
-            <!-- Campo Nome -->
-            <div class="form-group">
-                <label for="nome">Nome</label>
-                <input type="text" id="nome" name="nome" class="input-field" required>
-            </div>
+        <div class="form-image">
+            <img th:src="@{/images/img-cadastro.png}" alt="Imagem de Cadastro">
+        </div>
 
-            <!-- Campo WhatsApp -->
-            <div class="form-group">
-                <label for="whatsapp">WhatsApp</label>
-                <input type="tel" id="whatsapp" name="whatsapp" class="input-field" required>
-            </div>
+        <div class="form">
+            <form th:action="@{/comprador/create}" method="post" th:object="${comprador}">
+                
+                <div class="form-header">
+                    <div class="title">
+                        <h1>Cadastre-se</h1>
+                    </div>
+                    <div class="login-button">
+                        <button><a href="/loginComprador">Voltar</a></button>
+                    </div>
+                </div>
 
-            <!-- Campo Email -->
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" class="input-field" required>
-            </div>
+                <p th:text="${msg}"></p>
 
-            <!-- Campo Senha -->
-            <div class="form-group">
-                <label for="senha">Senha</label>
-                <input type="password" id="senha" name="senha" class="input-field" required>
-            </div>
+                <div class="input-group">
+                    <!-- Nome -->
+                    <div class="input-box">
+                        <label for="nome">Nome</label>
+                        <input type="text" id="nome" name="nome" placeholder="Digite seu nome" required>
+                    </div>
 
-            <!-- Botão de Cadastro -->
-            <button type="submit" class="button">Cadastrar</button>
-        </form>
+                    <div class="input-box">
+                        <label for="whatsapp">WhatsApp</label>
+                        <input type="tel" id="whatsapp" name="whatsapp" placeholder="Digite seu WhatsApp" required>
+                    </div>
 
-        <!-- Link para voltar -->
-        <div class="back-link">
-            <p>Já tem uma conta? <a href="/loginComprador">Faça login aqui</a></p>
+                    <div class="input-box">
+                        <label for="email">E-mail</label>
+                        <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
+                    </div>
+
+                    <div class="input-box">
+                        <label for="senha">Senha</label>
+                        <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
+                    </div>
+
+                    <div class="input-box">
+                        <label for="csenha">Confirme sua Senha</label>
+                        <input type="password" id="csenha" name="csenha" placeholder="Digite sua senha novamente" required>
+                    </div>
+                </div>
+
+                <div class="continue-button">
+                    <button type="submit">Cadastrar</button>
+                </div>
+
+                <div class="back-link">
+                    <p>Já tem uma conta? <a href="/loginComprador">Faça login aqui</a></p>
+                </div>
+            </form>
         </div>
     </div>
 
