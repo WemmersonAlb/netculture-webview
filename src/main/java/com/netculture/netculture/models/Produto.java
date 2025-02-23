@@ -14,6 +14,15 @@ public class Produto {
     private Double preco;
     private String imagem; // URL da imagem do produto
     private ObjectId vendedorId; 
+    private ObjectId lojaId;
+    public ObjectId getLojaId() {
+        return lojaId;
+    }
+
+    public void setLojaId(ObjectId lojaId) {
+        this.lojaId = lojaId;
+    }
+
     public Produto() {
     }
 

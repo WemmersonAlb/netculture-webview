@@ -16,3 +16,5 @@ if(vLogado){
         window.location.href = '/vendedor/loja/cadastro';
     });
 }
+
+

@@ -19,7 +19,7 @@
             <h1>Bem-vindo à Netculture</h1>
             <p>Esta é a página inicial do seu aplicativo. Use a barra de navegação para acessar diferentes seções.</p>
 
-            <!-- Botão visível apenas para vendedores logados -->
+            
             <div th:if="${vLogado != null}">
                 <h2>Painel do Vendedor</h2>
 
@@ -31,6 +31,21 @@
                     <button><a href="/produto/meus-produtos">Meus Produtos</a></button>
                 </div>
             </div>
+            <button id="addStore" class="add-store-btn" onclick="window.location.href='/vendedor/loja/create/view'">
+                <i class="fas fa-plus"></i> 
+            </button>
+
+            <div class="lojas-container">
+                <div th:each="loja : ${lojas}" class="loja-card" >
+                    <h2 th:text="${loja.titulo}">Título da Loja</h2>
+                    <p th:text="${loja.descricao}">Descrição da Loja</p>
+                    <p><strong>WhatsApp:</strong> <span th:text="${loja.whatsapp}">Número do WhatsApp</span></p>
+                    <span style="display: none;" th:text="${loja.id}" class="loja-id"></span>
+                    <!-- <button class="view-store-btn" th:data-url="'/vendedor/loja/' + ${loja.id} + '/view'"></button>
+                        <i class="fas fa-eye"></i>                              
+                    </button> -->
+                </div>
+            </div>
         </div>
 
         <script th:inline="javascript">
@@ -38,6 +53,16 @@
             var cLogado = /*[[${cLogado != null}]]*/ false;
             var vLogado = /*[[${vLogado != null}]]*/ false;
             /*]]>*/
+
+
+            var cards = document.getElementsByClassName("loja-card");
+            cards = Array.from(cards);
+            cards.forEach(card => {
+                card.addEventListener("click", function(){
+                    var url = "/vendedor/loja/" + card.getElementsByClassName("loja-id")[0].innerHTML + "/view";
+                    window.location.href = url; 
+                });
+            });
         </script>
     </body>
 </html>

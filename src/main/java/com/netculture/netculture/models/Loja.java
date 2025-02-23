@@ -29,5 +29,15 @@ public class Loja {
     private Map<String, String> imagens;//key: link da imagem no imgur, value: deleteHash
     private String whatsapp;
     private Vendedor vendedor;
-    private List<Item> itens;
+    private List<ObjectId> produtosId;
+
+    public Loja removerProduto(ObjectId produtoId){
+        for (ObjectId p : produtosId) {
+            if(p.equals(produtoId)){
+                produtosId.remove(p);
+                return this;
+            }
+        }
+        return this;
+    }
 }

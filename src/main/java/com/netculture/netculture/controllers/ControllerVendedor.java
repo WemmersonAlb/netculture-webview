@@ -1,35 +1,46 @@
 package com.netculture.netculture.controllers;
 
 import com.netculture.netculture.models.LoginDTO;
+import com.netculture.netculture.models.Loja;
+import com.netculture.netculture.models.Produto;
 import com.netculture.netculture.models.Vendedor;
+import com.netculture.netculture.repositories.RepositoryLoja;
+import com.netculture.netculture.repositories.RepositoryProduto;
 import com.netculture.netculture.repositories.RepositoryVendedor;
 
 import jakarta.servlet.http.HttpSession;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @Controller
 @RequestMapping("/vendedor")
 public class ControllerVendedor {
-    @Autowired
-    private RepositoryVendedor repositoryVendedor;
-    @Autowired
-    private HttpSession session;  
+    
+    private final RepositoryLoja repositoryLoja;
+    private final RepositoryVendedor repositoryVendedor; 
+    private final RepositoryProduto repositoryProduto;   
+    private final HttpSession session;
+    
+    public ControllerVendedor(RepositoryVendedor repositoryVendedor, HttpSession session, RepositoryLoja repositoryLoja, RepositoryProduto repositoryProduto) {
+        this.repositoryVendedor = repositoryVendedor;
+        this.session = session;
+        this.repositoryLoja = repositoryLoja;
+        this.repositoryProduto = repositoryProduto;
+    }
 
 
       
@@ -79,6 +90,8 @@ public class ControllerVendedor {
             vendedorLogin.setSenha(null);
             session.setAttribute("vLogado", vendedorLogin);
             m.addAttribute("vLogado", vendedorLogin);
+            List<Loja> lojas = repositoryLoja.findByVendedorId(vendedorLogin.getId());
+            m.addAttribute("lojas", lojas);
             return "homeVendedor";
         }
 
@@ -91,6 +104,7 @@ public class ControllerVendedor {
         Vendedor v = (Vendedor) session.getAttribute("vLogado");
         if(v!=null){
             m.addAttribute("vLogado", v);
+            m.addAttribute("lojas", repositoryLoja.findByVendedorId(v.getId()));
             return "homeVendedor";
         }
         return "loginVendedor";
@@ -143,42 +157,112 @@ public class ControllerVendedor {
         return "perfil";
     }
 
-
-
-
-
-
-
-
-
-
-    @PutMapping("update/{id}")
-    public ResponseEntity<Vendedor> updateVendedor(@PathVariable ObjectId id, @RequestBody Vendedor vendedorUpdate) {
-        Optional<Vendedor> vendedorExistente = repositoryVendedor.findById(id);
-        if (vendedorExistente.isPresent()) {
-            Vendedor v = vendedorExistente.get();
-            v.setNome(vendedorUpdate.getNome());
-            v.setEmail(vendedorUpdate.getEmail());
-            v.setWhatsapp(vendedorUpdate.getWhatsapp());
-            v.setSenha(vendedorUpdate.getSenha());
-            v.setDescricao(vendedorUpdate.getDescricao());
-            Vendedor vendedorSalvo = repositoryVendedor.save(v); 
-            if(!Vendedor.isNull(vendedorSalvo)){
-                return ResponseEntity.ok(vendedorSalvo);
-            }
-        }       
-        return ResponseEntity.badRequest().build();
+    @GetMapping("/loja/create/view")
+    public String createLojaView(Model m) {
+        m.addAttribute("loja", new Loja());
+        return "criarLoja";
     }
 
-    @DeleteMapping("delete/{id}")
-    public ResponseEntity<Boolean> deleteVendedor(@PathVariable ObjectId id){
-        Optional<Vendedor> vendedorExistente = repositoryVendedor.findById(id);
-        if(vendedorExistente.isPresent()){
-            repositoryVendedor.deleteById(id);
-            return ResponseEntity.ok(true);
+    @PostMapping("/loja/create")
+    public String createLoja(Model m, @ModelAttribute Loja loja) {
+        Vendedor v = (Vendedor) session.getAttribute("vLogado");
+        if (v == null) {
+            m.addAttribute("msg", "Erro: Vendedor não logado");
+            return "loginVendedor";
         }
-        return ResponseEntity.badRequest().build();
+        loja.setVendedor(v);
+        // Salvar a loja no repositório (RepositoryLoja)
+        repositoryLoja.save(loja);
+        m.addAttribute("msg", "Loja cadastrada com sucesso!");
+        List<Loja> lojas = repositoryLoja.findByVendedorId(v.getId());
+        m.addAttribute("lojas", lojas);
+        m.addAttribute("vLogado", v);
+        return "homeVendedor";
     }
-    
+
+    @GetMapping("/lojas/view")
+    public String cardLojas(Model m) {
+        Vendedor v = (Vendedor) session.getAttribute("vLogado");
+        if (v == null) {
+            m.addAttribute("msg", "Erro: Vendedor não logado");
+            return "loginVendedor";
+        }
+        List<Loja> lojas = repositoryLoja.findByVendedorId(v.getId());
+        m.addAttribute("lojas", lojas);
+        m.addAttribute("vLogado", v);
+        return "homeVendedor";
+    }
+
+    @GetMapping("/loja/{id}/view")
+    public String viewLoja(Model m, @PathVariable ObjectId id) {
+        Vendedor v = (Vendedor) session.getAttribute("vLogado");
+        if (v == null) {
+            m.addAttribute("msg", "Erro: Vendedor não logado");
+            return "loginVendedor";
+        }
+        Optional<Loja> lojaOpt = repositoryLoja.findById(id);
+        if (lojaOpt.isPresent()) {
+            Loja loja = lojaOpt.get();
+            List<Produto> produtos = repositoryProduto.findByLojaId(loja.getId());
+            List<Produto> produtosDisponiveis = repositoryProduto.findByVendedorId(v.getId());
+            produtosDisponiveis.removeAll(produtos);
+            m.addAttribute("loja", loja);
+            m.addAttribute("produtos", produtos);
+            m.addAttribute("produtosDisponiveis", produtosDisponiveis);
+            m.addAttribute("vLogado", v);
+            return "homeLoja";
+        }
+        m.addAttribute("msg", "Erro: Loja não encontrada");
+        return "homeVendedor";
+    }
+    @GetMapping("/loja/{lojaId}/addProduto/{produtoId}")
+    public String addProdutoToLoja(@PathVariable ObjectId lojaId, @PathVariable ObjectId produtoId, Model m) {
+        Vendedor v = (Vendedor) session.getAttribute("vLogado");
+        if (v == null) {
+            m.addAttribute("msg", "Erro: Vendedor não logado");
+            return "loginVendedor";
+        }
+        Optional<Produto> produtoOpt = repositoryProduto.findById(produtoId);
+        Optional<Loja> lojaOpt = repositoryLoja.findById(lojaId);
+        if (produtoOpt.isPresent() && lojaOpt.isPresent()) {
+            Produto produto = produtoOpt.get();
+            Loja loja = lojaOpt.get();
+            repositoryLoja.adicionarItem(loja.getId(), produto.getId());
+            m.addAttribute("msg", "Produto adicionado à loja com sucesso!");
+        } else {
+            m.addAttribute("msg", "Erro: Produto ou loja não encontrado");
+        }
+        Optional<Loja> lojaOpt1 = repositoryLoja.findById(lojaId);
+        if (lojaOpt1.isPresent()) {
+            Loja loja = lojaOpt1.get();
+            List<Produto> produtos = repositoryProduto.findByLojaId(loja.getId());
+            List<Produto> produtosDisponiveis = repositoryProduto.findByVendedorId(v.getId());
+            produtosDisponiveis.removeAll(produtos);
+            m.addAttribute("loja", loja);
+            m.addAttribute("produtos", produtos);
+            m.addAttribute("produtosDisponiveis", produtosDisponiveis);
+            m.addAttribute("vLogado", v);
+            return "homeLoja";
+        }
+    } 
+    @GetMapping("/loja/{lojaId}/removeProduto/{produtoId}")
+    public String removeProdutoFromLoja(@PathVariable ObjectId lojaId, @PathVariable ObjectId produtoId, Model m) {
+        Vendedor v = (Vendedor) session.getAttribute("vLogado");
+        if (v == null) {
+            m.addAttribute("msg", "Erro: Vendedor não logado");
+            return "loginVendedor";
+        }
+        Optional<Loja> lojaOpt = repositoryLoja.findById(lojaId);
+        if (lojaOpt.isPresent()) {
+            Loja loja = lojaOpt.get();
+            loja.removerProduto(produtoId);
+            repositoryLoja.save(loja);
+            m.addAttribute("msg", "Produto removido da loja com sucesso!");
+        } else {
+            m.addAttribute("msg", "Erro: Loja não encontrada");
+        }
+        return "redirect:/vendedor/loja/" + lojaId + "/view";
+    }
+
     
 }
