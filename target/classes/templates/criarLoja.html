@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Loja - NetCulture</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/CSS/cadastro.css}" />
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <a>NETCULTURE</a>
+    </div>
+
+    <!-- Formulário de Cadastro -->
+    <div class="container">
+        <h1>Cadastro de Loja</h1>
+        <form th:action="@{/vendedor/loja/create}" method="post" th:object="${loja}">
+            
+            <!-- Campo Título -->
+            <div class="form-group">
+                <label for="titulo">Título</label>
+                <input type="text" id="titulo" name="titulo" class="input-field" th:field="*{titulo}" required>
+            </div>
+
+            <!-- Campo Descrição -->
+            <div class="form-group">
+                <label for="descricao">Descrição</label>
+                <textarea id="descricao" name="descricao" class="input-field" th:field="*{descricao}" rows="4" required></textarea>
+            </div>
+
+            <!-- Campo Imagens 
+            <div class="form-group">
+                <label for="imagens">Imagens (link da imagem no imgur, deleteHash)</label>
+                <input type="text" id="imagens" name="imagens" class="input-field" th:field="*{imagens}" required>
+            </div>
+            -->
+            
+            <!-- Campo WhatsApp -->
+            <div class="form-group">
+                <label for="whatsapp">WhatsApp</label>
+                <input type="tel" id="whatsapp" name="whatsapp" class="input-field" th:field="*{whatsapp}" required>
+            </div>
+
+            <!-- Botão de Cadastro -->
+            <button type="submit" class="button">Cadastrar</button>
+        </form>
+
+        <!-- Link para voltar -->
+        <div class="back-link">
+            <p><a href="/vendedor/home/view">Voltar</a></p>
+        </div>
+    </div>
+
+</body>
+</html>

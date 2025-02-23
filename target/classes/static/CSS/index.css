@@ -1,0 +1,74 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-image: url('../images/marco-recife.png'); 
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.1); 
+    padding: 30px;
+    border-radius: 15px;
+    backdrop-filter: blur(80px); 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+h1 {
+    color: #fff;
+    font-size: 1.8em;
+    margin-bottom: 20px;
+}
+
+.description {
+    color: #f0f0f0;
+    font-size: 1em;
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.button {
+    background-color: #E63946;
+    color: #fff;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    cursor: pointer;
+    text-decoration: none;
+    margin: 10px 0;
+    width: 100%;
+    max-width: 300px;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.button:hover {
+    background-color: #1D3557;
+    transform: scale(1.05);
+}
+
+.forgot-link {
+    display: block;
+    margin-top: 10px;
+    font-size: 0.9em;
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.forgot-link:hover {
+    color: #E63946;
+    text-decoration: underline;
+}

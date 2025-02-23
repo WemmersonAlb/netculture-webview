@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt" xml:lang="pt">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>NetCulture</title>
+        <link rel="stylesheet" type="text/css" th:href="@{/CSS/perfil.css}" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <script defer th:src="@{/scripts/home.js}"></script>
+    </head>
+    <body>
+        <div class="navbar">
+            <a class="brand">Netculture</a>
+            <button id="menuProfile"><i class="fas fa-user"></i></button>
+        </div>
+        <div class="container">
+            <h1>Bem-vindo à Netculture</h1>
+            <p>Esta é a página inicial do seu aplicativo. Use a barra de navegação para acessar diferentes seções.</p>
+        </div>
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            var cLogado = /*[[${cLogado != null}]]*/ false;
+            var vLogado = /*[[${vLogado != null}]]*/ false;
+            /*]]>*/
+        </script>
+    </body>
+</html>

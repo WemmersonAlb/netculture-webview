@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" th:href="@{/CSS/login.css}" />
+    <title>Login - Comprador</title>
+</head>
+<body>
+    <div class="login-container">
+        <p th:text="${msg}"></p>
+        <h1>Login Comprador</h1>
+        <form th:action="@{/comprador/login}" method="post">
+            <input type="email" placeholder="E-mail" class="input-field" required name="email"><br>
+            <input type="password" placeholder="Senha" class="input-field" required name="senha"><br><br>
+            <button type="submit" class="button">Entrar</button>
+            <a class="button secondary" href="/comprador/create/view">Cadastrar</a><br><br>
+        </form>
+        <a href="#" class="forgot-link">Esqueceu a senha? Clique aqui</a>
+    </div>
+</body>
+</html>

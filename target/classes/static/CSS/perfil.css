@@ -1,0 +1,191 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    display: flex;
+}
+
+.navbar {
+    width: 60px;
+    background-color: #007bff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.navbar .brand {
+    font-family: 'Pacifico', cursive;
+    color: #fff;
+    font-size: 2.0rem;
+    margin-bottom: 20px;
+    text-decoration: none;
+}
+
+.navbar button {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.5rem;
+    margin: 20px 0;
+    cursor: pointer;
+}
+
+.navbar button:hover {
+    color: #0056b3;
+}
+
+.container {
+    flex: 1;
+    max-width: 100%;
+    margin: 0 auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 0;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+h1 {
+    text-align: center;
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.info-section {
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+#editForm {
+    display: none;
+}
+#userInfo {
+    display: block;
+}
+label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.add-store-btn {
+    background-color: #007bff; /* Cor de fundo */
+    border: none; /* Sem borda */
+    color: white; /* Cor do texto */
+    padding: 15px 32px; /* Espaçamento interno */
+    text-align: center; /* Alinhamento do texto */
+    text-decoration: none; /* Sem sublinhado */
+    display: inline-block; /* Exibição inline */
+    font-size: 16px; /* Tamanho da fonte */
+    margin: 4px 2px; /* Margem */
+    cursor: pointer; /* Cursor de ponteiro */
+    border-radius: 12px; /* Bordas arredondadas */
+}
+
+
+
+.lojas-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.loja-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+    padding: 20px;
+    width: 300px;
+    text-align: center;
+}
+
+.loja-card h2 {
+    color: #333;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.loja-card p {
+    color: #666;
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.action-buttons button {
+    width: 48%;
+    font-size: 1rem;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+@media (max-width: 480px) {
+    body {
+        flex-direction: column;
+    }
+
+    .navbar {
+        width: 100%;
+        height: 60px;
+        flex-direction: row;
+        justify-content: space-around;
+        padding: 0;
+    }
+
+    .navbar .brand {
+        font-size: 2.0rem;
+        margin: 0;
+    }
+
+    .navbar button {
+        margin: 0;
+        font-size: 1.2rem;
+    }
+
+    .container {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    label {
+        font-size: 0.9rem;
+    }
+
+    input {
+        font-size: 0.8rem;
+        padding: 10px;
+    }
+
+    .action-buttons button {
+        font-size: 0.9rem;
+        padding: 10px;
+    }
+}

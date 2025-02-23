@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt" xml:lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${cLogado != null ? 'Perfil Comprador' : 'Perfil Vendedor'}">Página de Perfil</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/CSS/perfil.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script defer th:src="@{/scripts/perfil.js}"></script>
+</head>
+<body>
+    <div class="navbar">
+        <a th:href="${cLogado != null ? '/comprador/home/view' : '/vendedor/home/view'}" class="brand">Netculture</a>
+        <button id="menuProfile"><i class="fas fa-user"></i></button>
+        <button id="menuEdit"><i class="fas fa-edit"></i></button>
+        <button id="menuLogout"><i class="fas fa-power-off"></i></button>
+    </div>
+    <div class="container">
+        <h1>Perfil do Usuário: <span th:text="${cLogado != null ? cLogado.nome : vLogado.nome}">Nome do Usuário</span></h1>
+
+        <div id="userInfo" class="info-section">
+            <p><strong>Nome:</strong> <span th:text="${cLogado != null ? cLogado.nome : vLogado.nome}">Nome do Usuário</span></p>
+            <p><strong>Email:</strong> <span th:text="${cLogado != null ? cLogado.email : vLogado.email}">Email do Usuário</span></p>
+            <p><strong>Telefone:</strong> <span th:text="${cLogado != null ? cLogado.whatsapp : vLogado.whatsapp}">Número de Telefone</span></p>
+        </div>
+        
+        <div id="editForm" class="info-section">
+            <form th:action="${cLogado != null ? '/comprador/update' : '/vendedor/update'}" method="post">
+                <label for="name">Nome:</label>
+                <input type="text" id="name" name="nome" th:value="${cLogado != null ? cLogado.nome : vLogado.nome}" placeholder="Digite o nome" required>
+            
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" th:value="${cLogado != null ? cLogado.email : vLogado.email}" placeholder="Digite o email" required>
+
+                <label for="phone">Telefone:</label>
+                <input type="tel" id="phone" name="whatsapp" th:value="${cLogado != null ? cLogado.whatsapp : vLogado.whatsapp}" placeholder="Digite o número de telefone" required>
+
+                <label for="password">Senha:</label>
+                <input type="password" id="password" name="senha" th:value="${cLogado != null ? cLogado.senha : vLogado.senha}" placeholder="Digite a senha" required>
+
+                <label for="confirmPassword">Repetir Senha:</label>
+                <input type="password" id="confirmPassword" placeholder="Repita a senha" required>
+
+                <div th:if="${vLogado != null}">
+                    <label for="descricao">Descrição:</label>
+                    <input type="text" id="descricao" name="descricao" th:value="${vLogado.descricao}" placeholder="Digite a descrição" required>
+                </div>
+            
+                <div class="action-buttons">
+                    <button type="submit" id="saveChanges">Salvar</button>
+                    <button type="button" id="cancelEdit">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var cLogado = /*[[${cLogado != null}]]*/ false;
+        var vLogado = /*[[${vLogado != null}]]*/ false;
+        /*]]>*/
+    </script>
+</body>
+</html>

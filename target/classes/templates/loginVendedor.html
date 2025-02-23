@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Vendedor</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/CSS/login.css}" />
+</head>
+<body>
+
+    <div class="login-container">
+        <h1>Login Vendedor</h1>
+        <form th:action="@{/vendedor/login}" method="post">
+            <input type="email" class="input-field" placeholder="E-mail" id="emailVendedor" name="email" required>
+            <input type="password" class="input-field" placeholder="Senha" id="senhaVendedor" name="senha"  required><br><br>
+            <button type="submit" class="button">Entrar</button>
+            <a type="button" class="button secondary" href="/vendedor/create/view">Cadastrar</a><br><br>
+        </form>
+        <a href="#" class="forgot-link">Esqueceu a senha? Clique aqui</a>
+    </div>
+</body>
+</html>
